@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% set page="atrisk" %}
+{% block title %}At-Risk Employees{% endblock %}
+{% block subtitle %}Top employees most likely to leave &mdash; filter by risk tier{% endblock %}
+
+{% block content %}
+<!-- Tier filter -->
+<div class="box" style="padding:14px 20px;margin-bottom:16px">
+  <form method="get" style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+    <span style="font-size:13px;font-weight:600;color:var(--dark)">Filter by Risk Tier:</span>
+    {% for t in ["Critical","High","Medium","Low"] %}
+    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px">
+      <input type="checkbox" name="tier" value="{{ t }}"
+             {{ 'checked' if t in tier_filter else '' }} style="width:auto">
+      <span class="badge badge-{{ t }}">{{ t }}</span>
+    </label>
+    {% endfor %}
+    <button class="btn btn-sm" type="submit">Apply</button>
+  </form>
+</div>
+
+<!-- KPI cards -->
+<div class="cards" style="grid-template-columns:repeat(4,1fr)">
+  {% for t, n in counts.items() %}
+  <div class="card" style="border-top-color:{{ tier_clr[t] }}">
+    <div class="label">{{ t }} Risk</div>
+    <div class="value" style="color:{{ tier_clr[t] }}">{{ n }}</div>
+    <div class="delta" style="color:var(--muted)">{{ "%.1f%%"|format(n / total * 100) }} of total</div>
+  </div>
+  {% endfor %}
+</div>
+
+<hr>
+
+<div class="row">
+  <div class="box">
+    <h2>Risk Tier Distribution</h2>
+    <div id="pie"></div>
+  </div>
+  <div class="box" style="display:flex;flex-direction:column;justify-content:center;align-items:center;gap:16px">
+    <p style="font-size:13px;color:var(--muted);text-align:center">
+      Showing top <strong>{{ rows|length }}</strong> at-risk employees
+    </p>
+    <a href="/download_atrisk" class="btn">Download Full CSV</a>
+    <a href="/atrisk?tier=Critical&tier=High&tier=Medium&tier=Low" class="btn btn-outline">Show All Tiers</a>
+  </div>
+</div>
+
+<!-- Table -->
+<div class="box">
+  <h2>At-Risk Employee List</h2>
+  <div class="table-wrap">
+  <table>
+    <tr>{% for c in cols %}<th>{{ c }}</th>{% endfor %}</tr>
+    {% for row in rows %}
+    <tr class="row-{{ row['RiskTier'] if 'RiskTier' in row else '' }}">
+      {% for c in cols %}
+      <td>
+        {% if c == 'AttritionProbability' %}
+          <strong>{{ "%.1f%%"|format(row[c] * 100) }}</strong>
+        {% elif c == 'RiskTier' %}
+          <span class="badge badge-{{ row[c] }}">{{ row[c] }}</span>
+        {% elif c == 'MonthlyIncome' %}
+          Rs.{{ "{:,}".format(row[c]|int) }}
+        {% else %}
+          {{ row[c] }}
+        {% endif %}
+      </td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </table>
+  </div>
+</div>
+
+<script>
+var pie = {{ pie|safe }};
+Plotly.newPlot('pie', pie.data, pie.layout, {responsive:true, displayModeBar:false});
+</script>
+{% endblock %}

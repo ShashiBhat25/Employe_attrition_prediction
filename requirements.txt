@@ -1,0 +1,11 @@
+scikit-learn
+xgboost
+imbalanced-learn
+fairlearn
+plotly
+streamlit
+matplotlib
+seaborn
+joblib
+openpyxl
+pyarrow

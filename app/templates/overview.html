@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% set page="overview" %}
+{% block title %}Workforce Attrition Overview{% endblock %}
+{% block subtitle %}IBM HR Analytics &middot; Test Set Results{% endblock %}
+
+{% block content %}
+<!-- KPI Cards -->
+<div class="cards">
+  {% for label, val in kpis.items() %}
+  <div class="card">
+    <div class="label">{{ label }}</div>
+    <div class="value">{{ val }}</div>
+  </div>
+  {% endfor %}
+</div>
+
+<hr>
+
+<!-- Charts row -->
+<div class="row">
+  <div class="box">
+    <h2>Attrition Rate by Department</h2>
+    <div id="dept"></div>
+  </div>
+  <div class="box">
+    <h2>Attrition Rate by Job Role</h2>
+    <div id="role"></div>
+  </div>
+</div>
+
+<!-- Model comparison -->
+<div class="box">
+  <h2>Model Performance Comparison &mdash; Best: <span style="color:var(--red)">{{ best }}</span></h2>
+  <div class="table-wrap">
+  <table>
+    <tr>{% for k in model_rows[0] %}<th>{{ k }}</th>{% endfor %}</tr>
+    {% for row in model_rows %}
+    <tr {% if row.Model == best %}style="font-weight:600;background:#fff5f5"{% endif %}>
+      {% for v in row.values() %}<td>{{ v }}</td>{% endfor %}
+    </tr>
+    {% endfor %}
+  </table>
+  </div>
+</div>
+
+<script>
+var d1 = {{ fig_dept|safe }};
+var d2 = {{ fig_role|safe }};
+Plotly.newPlot('dept', d1.data, d1.layout, {responsive:true, displayModeBar:false});
+Plotly.newPlot('role', d2.data, d2.layout, {responsive:true, displayModeBar:false});
+</script>
+{% endblock %}

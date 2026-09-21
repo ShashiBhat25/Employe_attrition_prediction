@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% set page="heatmap" %}
+{% block title %}Attrition Risk Heatmap{% endblock %}
+{% block subtitle %}Average predicted attrition probability across Department &times; Job Role{% endblock %}
+
+{% block content %}
+<div class="box">
+  <h2>Department &times; Job Role Heatmap</h2>
+  <div id="hmap"></div>
+</div>
+
+<div class="row">
+  <div class="box">
+    <h2>Avg Attrition Probability by Department</h2>
+    <div id="dept_bar"></div>
+  </div>
+  {% if ot_fig %}
+  <div class="box">
+    <h2>Attrition Probability by OverTime</h2>
+    <div id="ot"></div>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+var hm = {{ fig|safe }};
+var db = {{ dept_fig|safe }};
+Plotly.newPlot('hmap',     hm.data, hm.layout, {responsive:true, displayModeBar:false});
+Plotly.newPlot('dept_bar', db.data, db.layout, {responsive:true, displayModeBar:false});
+{% if ot_fig %}
+var ot = {{ ot_fig|safe }};
+Plotly.newPlot('ot', ot.data, ot.layout, {responsive:true, displayModeBar:false});
+{% endif %}
+</script>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% set page="roi" %}
+{% block title %}Retention ROI Calculator{% endblock %}
+{% block subtitle %}Estimate the financial return of a targeted retention programme{% endblock %}
+
+{% block content %}
+<!-- Input form -->
+<div class="box">
+  <h2>Programme Parameters</h2>
+  <form method="get">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 32px">
+      <div>
+        <div class="field">
+          <label>Average Annual Salary (INR)</label>
+          <input type="number" name="sal" value="{{ sal }}" step="50000" min="100000">
+        </div>
+        <div class="field">
+          <label>Replacement Cost (% of salary)</label>
+          <input type="number" name="rpct" value="{{ rpct }}" min="50" max="200" step="5">
+        </div>
+      </div>
+      <div>
+        <div class="field">
+          <label>Intervention Cost per Employee (INR)</label>
+          <input type="number" name="icost" value="{{ icost }}" step="5000" min="0">
+        </div>
+        <div class="field">
+          <label>Intervention Success Rate (%)</label>
+          <input type="number" name="srate" value="{{ srate }}" min="10" max="80" step="5">
+        </div>
+      </div>
+    </div>
+    <button class="btn" type="submit" style="margin-top:8px">Calculate ROI</button>
+  </form>
+</div>
+
+<hr>
+
+<!-- KPI cards -->
+<div class="cards">
+  {% for label, val in kpis.items() %}
+  <div class="card" style="border-top-color:var(--blue)">
+    <div class="label">{{ label }}</div>
+    <div class="value" style="font-size:18px">{{ val }}</div>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- Waterfall chart -->
+<div class="box">
+  <h2>Financial Impact Breakdown (INR)</h2>
+  <div id="waterfall"></div>
+</div>
+
+<script>
+var wf = {{ fig|safe }};
+Plotly.newPlot('waterfall', wf.data, wf.layout, {responsive:true, displayModeBar:false});
+</script>
+{% endblock %}

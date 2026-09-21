@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% set page="drivers" %}
+{% block title %}Attrition Drivers{% endblock %}
+{% block subtitle %}Feature importance &mdash; top predictors of employee attrition{% endblock %}
+
+{% block content %}
+<!-- Controls -->
+<div class="box" style="padding:14px 20px;margin-bottom:16px">
+  <form method="get" style="display:flex;align-items:center;gap:16px">
+    <span style="font-size:13px;font-weight:600;color:var(--dark)">Number of top features:</span>
+    <div class="field" style="margin:0;width:80px">
+      <input type="number" name="n" value="{{ n }}" min="5" max="30">
+    </div>
+    <button class="btn btn-sm" type="submit">Update</button>
+  </form>
+</div>
+
+<!-- Bar chart -->
+<div class="box">
+  <h2>Top {{ n }} Attrition Drivers &mdash; Feature Importance</h2>
+  <div id="bar"></div>
+</div>
+
+<!-- Static image -->
+{% if has_img %}
+<div class="box">
+  <h2>Feature Importance Chart</h2>
+  <img src="/artifacts/plots/feature_importance.png"
+       style="max-width:100%;border-radius:6px;display:block">
+</div>
+{% endif %}
+
+<script>
+var bar = {{ fig|safe }};
+Plotly.newPlot('bar', bar.data, bar.layout, {responsive:true, displayModeBar:false});
+</script>
+{% endblock %}

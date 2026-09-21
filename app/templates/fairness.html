@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% set page="fairness" %}
+{% block title %}Fairness Analysis{% endblock %}
+{% block subtitle %}Ensuring the model does not discriminate by Gender or Age Group{% endblock %}
+
+{% block content %}
+{% for attr, d in fair.items() %}
+<div class="box">
+  <h2>Sensitive Attribute: {{ attr }}</h2>
+
+  <!-- Metric cards -->
+  <div class="row-3" style="margin-bottom:14px">
+    <div class="card" style="border-top-color:var(--blue)">
+      <div class="label">Demographic Parity Difference</div>
+      <div class="value" style="font-size:20px">{{ "%.4f"|format(d.demographic_parity_difference) }}</div>
+      <div class="delta" style="color:var(--muted)">0 = perfect parity</div>
+    </div>
+    <div class="card" style="border-top-color:var(--blue)">
+      <div class="label">Demographic Parity Ratio</div>
+      <div class="value" style="font-size:20px">{{ "%.4f"|format(d.demographic_parity_ratio) }}</div>
+      <div class="delta" style="color:var(--muted)">1 = perfect parity</div>
+    </div>
+    <div class="card" style="border-top-color:var(--blue)">
+      <div class="label">Equalized Odds Difference</div>
+      <div class="value" style="font-size:20px">{{ "%.4f"|format(d.equalized_odds_difference) }}</div>
+      <div class="delta" style="color:var(--muted)">0 = perfect parity</div>
+    </div>
+  </div>
+
+  <!-- Alert -->
+  {% if d.demographic_parity_difference|abs > 0.1 %}
+  <div class="alert alert-warn">
+    <span class="alert-icon">&#9888;</span>
+    <span>Demographic Parity Difference for <strong>{{ attr }}</strong> is
+    {{ "%.4f"|format(d.demographic_parity_difference) }} (&gt; 0.1 threshold).
+    Consider reviewing proxy features or applying Fairlearn mitigation.</span>
+  </div>
+  {% else %}
+  <div class="alert alert-ok">
+    <span class="alert-icon">&#10003;</span>
+    <span>Fairness check passed for <strong>{{ attr }}</strong> (|DPD| &le; 0.1).</span>
+  </div>
+  {% endif %}
+
+  <!-- Per-group table -->
+  <div class="table-wrap" style="margin-bottom:16px">
+  <table>
+    <tr>{% for k in d.by_group[0] %}<th>{{ k }}</th>{% endfor %}</tr>
+    {% for row in d.by_group %}
+    <tr>
+      {% for k, v in row.items() %}
+      <td>{{ "%.3f"|format(v) if v is number else v }}</td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </table>
+  </div>
+
+  <!-- Chart image -->
+  {% if charts[attr] %}
+  <img src="/artifacts/plots/fairness_{{ attr }}.png"
+       style="max-width:560px;border-radius:6px;display:block">
+  {% endif %}
+</div>
+{% endfor %}
+{% endblock %}

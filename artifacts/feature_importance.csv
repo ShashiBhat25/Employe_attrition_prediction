@@ -1,0 +1,54 @@
+Feature,Importance
+OverTime,0.9194123420072952
+JobRole_Research Director,0.861258027248977
+TotalWorkingYears,0.7709882718918672
+NumCompaniesWorked,0.5300715261709416
+JobRole_Laboratory Technician,0.5284905259570506
+Department_Human Resources,0.526070060594197
+JobRole_Human Resources,0.5071990698720805
+YearsWithCurrManager,0.4961790960292792
+YearsSinceLastPromotion,0.46159641550034974
+JobLevel,0.45982302239402384
+JobRole_Manager,0.45401217197860383
+BusinessTravel_Non-Travel,0.44791328259351265
+JobRole_Sales Representative,0.3874317709949622
+SatisfactionAvg,0.3800088054418763
+PercentSalaryHike,0.3793583073338834
+BusinessTravel_Travel_Frequently,0.33018638857459287
+EnvironmentSatisfaction,0.32876052806781836
+JobInvolvement,0.32183036253667785
+JobRole_Healthcare Representative,0.31518408240858736
+StockOptionLevel,0.28750125839232676
+EducationField_Human Resources,0.2752562699611798
+EducationField_Other,0.27365747104267635
+MaritalStatus_Single,0.2725370204130224
+IncomePerYear,0.2723020155924988
+Stagnation,0.2707182899422641
+Age,0.2694587089443793
+DistanceFromHome,0.2509926104390879
+MonthlyIncome,0.24037032960973245
+TrainingTimesLastYear,0.23164794621199306
+DailyRate,0.2191508383578141
+MaritalStatus_Divorced,0.21870463250072564
+YearsInCurrentRole,0.18161967635002854
+JobRole_Manufacturing Director,0.16719426034573223
+JobSatisfaction,0.16561866925108376
+Education,0.1529587389696037
+RelationshipSatisfaction,0.15223532882570662
+YearsAtCompany,0.15183672627078712
+JobRole_Sales Executive,0.1320712208809082
+PerformanceRating,0.13017972601285402
+EducationField_Technical Degree,0.12014739031108869
+Department_Sales,0.1189182802696929
+Gender_Male,0.11852256678552701
+Gender_Female,0.11852256678552701
+Department_Research & Development,0.10294991335313469
+WorkLifeBalance,0.09511190917406748
+MaritalStatus_Married,0.07164293120495883
+EducationField_Medical,0.06944155953672827
+EducationField_Marketing,0.06790032181859833
+EducationField_Life Sciences,0.045495486542897194
+HourlyRate,0.03519688926774655
+JobRole_Research Scientist,0.03125053916391049
+BusinessTravel_Travel_Rarely,0.015765257748553495
+MonthlyRate,0.013500822534207113

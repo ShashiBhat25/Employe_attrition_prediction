@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% set page="predict" %}
+{% block title %}Predict Attrition Risk{% endblock %}
+{% block subtitle %}Enter employee details to get an instant attrition risk score{% endblock %}
+
+{% block content %}
+
+<!-- Safe Zone Guide -->
+<div class="box" style="border-top:3px solid var(--green);margin-bottom:20px">
+  <h2 style="color:var(--green)">Safe Zone Guide &mdash; Target values to keep risk below 20%</h2>
+  <p style="font-size:12px;color:var(--muted);margin-bottom:14px">
+    Based on employees with &lt;20% predicted attrition probability in the dataset.
+  </p>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px 24px">
+    {% set guide = [
+      ("OverTime",                  "No",       "Yes = 3x higher risk"),
+      ("Job Satisfaction (1-4)",    "3 or 4",   "Below 3 doubles risk"),
+      ("Work-Life Balance (1-4)",   "3 or 4",   "Below 3 doubles risk"),
+      ("Env Satisfaction (1-4)",    "3 or 4",   "Below 3 doubles risk"),
+      ("Rel Satisfaction (1-4)",    "3 or 4",   "Below 3 doubles risk"),
+      ("Stock Option Level (0-3)",  "1 or more","0 = significantly higher risk"),
+      ("Monthly Income (INR)",      ">= 50,000","Below 40k = high risk"),
+      ("Years at Company",          ">= 5",     "< 3 years = high churn zone"),
+      ("Years in Current Role",     ">= 4",     "Stagnation if too low vs tenure"),
+      ("Total Working Years",       ">= 8",     "Early career = higher risk"),
+      ("Age",                       ">= 35",    "Younger employees leave more"),
+      ("Distance from Home (km)",   "<= 10",    "Long commute increases risk"),
+      ("Num Companies Worked",      "<= 3",     "Job-hoppers have higher baseline"),
+      ("Training Times/Year",       ">= 3",     "No training = disengagement"),
+      ("Years Since Promotion",     "<= 2",     "No promotion > 3 yrs = risk"),
+    ] %}
+    {% for field, target, note in guide %}
+    <div style="background:#f8fffe;border:1px solid #d5f5e3;border-radius:6px;padding:10px 12px">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:3px">{{ field }}</div>
+      <div style="font-size:15px;font-weight:700;color:var(--green)">{{ target }}</div>
+      <div style="font-size:11px;color:#888;margin-top:2px">{{ note }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Input form -->
+<div class="box">
+  <h2>Employee Details</h2>
+  <form method="post" class="form-grid">
+    <div>
+      <div class="field"><label>Age <span style="color:var(--green);font-size:11px">(target: &ge; 35)</span></label>
+        <input type="number" name="age" value="35" min="18" max="65"></div>
+      <div class="field"><label>Monthly Income (INR) <span style="color:var(--green);font-size:11px">(target: &ge; 50,000)</span></label>
+        <input type="number" name="income" value="50000" step="5000" min="10000" max="200000"></div>
+      <div class="field"><label>Years at Company <span style="color:var(--green);font-size:11px">(target: &ge; 5)</span></label>
+        <input type="number" name="yac" value="5" min="0" max="40"></div>
+      <div class="field"><label>Distance from Home (km) <span style="color:var(--green);font-size:11px">(target: &le; 10)</span></label>
+        <input type="number" name="dist" value="5" min="1" max="29"></div>
+      <div class="field"><label>Environment Satisfaction (1-4) <span style="color:var(--green);font-size:11px">(target: &ge; 3)</span></label>
+        <input type="number" name="es" value="3" min="1" max="4"></div>
+    </div>
+    <div>
+      <div class="field"><label>Years Since Last Promotion <span style="color:var(--green);font-size:11px">(target: &le; 2)</span></label>
+        <input type="number" name="ysp" value="1" min="0" max="15"></div>
+      <div class="field"><label>Years in Current Role <span style="color:var(--green);font-size:11px">(target: &ge; 4)</span></label>
+        <input type="number" name="yir" value="4" min="0" max="18"></div>
+      <div class="field"><label>Total Working Years <span style="color:var(--green);font-size:11px">(target: &ge; 8)</span></label>
+        <input type="number" name="twy" value="10" min="0" max="40"></div>
+      <div class="field"><label>Stock Option Level (0-3) <span style="color:var(--green);font-size:11px">(target: &ge; 1)</span></label>
+        <input type="number" name="so" value="1" min="0" max="3"></div>
+      <div class="field"><label>Relationship Satisfaction (1-4) <span style="color:var(--green);font-size:11px">(target: &ge; 3)</span></label>
+        <input type="number" name="rs" value="3" min="1" max="4"></div>
+    </div>
+    <div>
+      <div class="field"><label>OverTime <span style="color:var(--green);font-size:11px">(target: No)</span></label>
+        <select name="ot"><option>No</option><option>Yes</option></select></div>
+      <div class="field"><label>Job Satisfaction (1-4) <span style="color:var(--green);font-size:11px">(target: &ge; 3)</span></label>
+        <input type="number" name="js" value="3" min="1" max="4"></div>
+      <div class="field"><label>Work-Life Balance (1-4) <span style="color:var(--green);font-size:11px">(target: &ge; 3)</span></label>
+        <input type="number" name="wlb" value="3" min="1" max="4"></div>
+      <div class="field"><label>Num Companies Worked <span style="color:var(--green);font-size:11px">(target: &le; 3)</span></label>
+        <input type="number" name="nc" value="2" min="0" max="9"></div>
+      <div class="field"><label>Training Times Last Year <span style="color:var(--green);font-size:11px">(target: &ge; 3)</span></label>
+        <input type="number" name="tt" value="3" min="0" max="6"></div>
+    </div>
+    <div style="grid-column:1/-1;margin-top:8px">
+      <button class="btn" type="submit">Predict Attrition Risk</button>
+    </div>
+  </form>
+</div>
+
+{% if result %}
+<hr>
+<!-- Result card -->
+<div class="result-card" style="border-color:{{ result.color }};background:{{ result.color }}12">
+  <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+    <div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:4px">Risk Tier</div>
+      <span class="badge badge-{{ result.tier }}" style="font-size:15px;padding:6px 18px">{{ result.tier }}</span>
+    </div>
+    <div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:4px">Attrition Probability</div>
+      <div style="font-size:36px;font-weight:700;color:{{ result.color }}">{{ result.prob }}</div>
+    </div>
+    <div style="flex:1;min-width:220px">
+      <div style="font-size:12px;color:var(--muted);margin-bottom:4px">Recommended Action</div>
+      <div style="font-size:15px;font-weight:600;color:var(--dark)">{{ result.action }}</div>
+    </div>
+    {% if result.tier in ['Critical','High'] %}
+    <div style="background:#fff5f5;border:1px solid #fadbd8;border-radius:8px;padding:12px 16px;min-width:220px">
+      <div style="font-size:12px;font-weight:600;color:var(--red);margin-bottom:6px">To reduce below 20%:</div>
+      <ul style="font-size:12px;color:var(--dark);padding-left:16px;line-height:1.8">
+        <li>Set OverTime = <strong>No</strong></li>
+        <li>Job/Env/WLB Satisfaction &ge; <strong>3</strong></li>
+        <li>Stock Option Level &ge; <strong>1</strong></li>
+        <li>Monthly Income &ge; <strong>Rs.50,000</strong></li>
+        <li>Promote within <strong>2 years</strong></li>
+      </ul>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Gauge -->
+<div class="box">
+  <h2>Attrition Probability Gauge</h2>
+  <div id="gauge"></div>
+</div>
+
+<script>
+var g = {{ result.gauge|safe }};
+Plotly.newPlot('gauge', g.data, g.layout, {responsive:true, displayModeBar:false});
+</script>
+{% endif %}
+{% endblock %}

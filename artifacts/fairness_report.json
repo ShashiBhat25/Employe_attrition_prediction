@@ -1,0 +1,58 @@
+{
+  "Gender": {
+    "demographic_parity_difference": 0.0252808988764045,
+    "demographic_parity_ratio": 0.9081632653061225,
+    "equalized_odds_difference": 0.04435483870967738,
+    "by_group": [
+      {
+        "Gender": "Female",
+        "selection_rate": 0.25,
+        "recall": 0.625,
+        "precision": 0.3448275862068966
+      },
+      {
+        "Gender": "Male",
+        "selection_rate": 0.2752808988764045,
+        "recall": 0.5806451612903226,
+        "precision": 0.3673469387755102
+      }
+    ]
+  },
+  "AgeGroup": {
+    "demographic_parity_difference": 0.46464646464646464,
+    "demographic_parity_ratio": 0.16363636363636364,
+    "equalized_odds_difference": 0.5238095238095237,
+    "by_group": [
+      {
+        "AgeGroup": "25-34",
+        "selection_rate": 0.2975206611570248,
+        "recall": 0.6,
+        "precision": 0.3333333333333333
+      },
+      {
+        "AgeGroup": "35-44",
+        "selection_rate": 0.1836734693877551,
+        "recall": 0.6363636363636364,
+        "precision": 0.3888888888888889
+      },
+      {
+        "AgeGroup": "45-54",
+        "selection_rate": 0.21621621621621623,
+        "recall": 0.3333333333333333,
+        "precision": 0.25
+      },
+      {
+        "AgeGroup": "55+",
+        "selection_rate": 0.09090909090909091,
+        "recall": 0.3333333333333333,
+        "precision": 1.0
+      },
+      {
+        "AgeGroup": "<25",
+        "selection_rate": 0.5555555555555556,
+        "recall": 0.8571428571428571,
+        "precision": 0.4
+      }
+    ]
+  }
+}
